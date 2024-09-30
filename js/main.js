@@ -31,10 +31,7 @@ const PostList = ({ somePost, title, removePost }) => {
 const MyInput = (props) => {
     return (
         <div>
-            <input {...props} style={{ width: '500px', padding: '5px 10px', margin: '5px', border: '1px solid rgb(0, 28, 128)',
-            fontWeight:'700' 
-                
-            }} />
+            <input {...props}  />
        
         </div>
     );
@@ -43,10 +40,7 @@ const MyInput = (props) => {
 
 const MyButton = (props) => {
     return (
-        <button style={{
-            padding: '5px 15px',  fontSize: '14px', border: '1px solid',
-            width: 'auto', alignItems: 'flex-end', margin: '5px'
-        }}
+        <button 
             onClick={props.onClick}>
             Publish 
         </button>
