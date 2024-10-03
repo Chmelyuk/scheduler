@@ -1,97 +1,79 @@
-const { useEffect, useState } = React;
+const { useState } = React;
 const rootElement = document.getElementById('app');
 
-const PostItem = (props) => {
-    return (
-        <div className="post">
-            <div className="post__content">
-                <strong>{props.number} {props.post.title}</strong>
-                <div>
-                    {props.post.body}
-                </div>
-            </div>
-            <div className="post__btns">
-                <button onClick={() => props.removePost(props.post)}>🗑️</button>
-            </div>
-        </div>
-    );
-};
-
-const PostList = ({ somePost, title, removePost }) => {
-    return (
-        <div>
-            <h1 style={{ textAlign: 'center' }}>{title}</h1>
-            {somePost.map((post, index) =>
-                <PostItem number={index + 1} post={post} key={post.id} removePost={removePost} />
-            )}
-        </div>
-    );
-};
-
-const MyInput = (props) => {
-    return (
-        <div>
-            <input {...props} style={{ width: '500px', padding: '5px 10px', margin: '5px', border: '1px solid rgb(0, 28, 128)',
-            fontWeight:'700' 
-                
-            }} />
-       
-        </div>
-    );
-};
-
-
-const MyButton = (props) => {
-    return (
-        <button style={{
-            padding: '5px 15px',  fontSize: '14px', border: '1px solid',
-            width: 'auto', alignItems: 'flex-end', margin: '5px'
-        }}
-            onClick={props.onClick}>
-            Publish 
-        </button>
-    );
-};
-
 function App() {
-    const [somePost, setPosts] = useState([
-      
-    ]);
-    const [title, setTitle] = useState('');
-    const [body, setDescription] = useState('');
+    const [inputValue, setInputValue] = useState('');
+    const [inputAlcohol, setInputAlcohol] = useState('beer');
+    const [outputAlcohol, setOutputAlcohol] = useState('vodka');
 
-    const addNewPost = (e) => {
-        e.preventDefault();
-        const newPost = {
-            id: Date.now(),
-            title,
-            
-        };
-        setPosts([...somePost, newPost]);
-        
-        
-        setTitle('');
-        setDescription('');
+    const alcoholTypes = {
+        beer: 4.7,
+        vodka: 40,
+        wine: 12,
+        whiskey: 43,
+        brandy: 40,
     };
 
-    const removePost = (post) => {
-        setPosts(somePost.filter(p => p.id !== post.id));
+    const convertAlcohol = () => {
+        if (!inputValue) return 0;
+
+        const inputStrength = alcoholTypes[inputAlcohol];
+        const outputStrength = alcoholTypes[outputAlcohol];
+
+        const inputGrams = (Number(inputValue) * 1000 * inputStrength) / 100;  // Граммы чистого алкоголя
+        const outputLiters = inputGrams / ((outputStrength / 100) * 1000);  // Литры целевого напитка
+
+        return outputLiters.toFixed(2);  // Округляем до двух знаков
     };
 
     return (
-        <div className="App">
-           
-            <form>
-            <h3>To do list</h3>
-                <MyInput value={title}
-                    type='text' placeholder='Name your business'
-                    onChange={e => setTitle(e.target.value) }  />
-                <div className="MyButton">
-                <MyButton  onClick={addNewPost} />
+        <>
+            <div className='container'>
+                <h1>Конвертер алкоголя</h1>
+
+                <div className='converter'>
+                    <div className='input-block'>
+                        <label htmlFor="inputAlcohol">Выберите исходный алкоголь:</label>
+                        <select
+                            id="inputAlcohol"
+                            value={inputAlcohol}
+                            onChange={(event) => setInputAlcohol(event.target.value)}>
+                            <option value="beer">Пиво</option>
+                            <option value="vodka">Водка</option>
+                            <option value="wine">Вино</option>
+                            <option value="whiskey">Виски</option>
+                            <option value="brandy">Коньяк</option>
+                        </select>
+
+                        <input
+                            className='input-field'
+                            placeholder='Введите количество в литрах'
+                            type="text"
+                            value={inputValue}
+                            onChange={(event) => setInputValue(event.target.value)}
+                        />
+                    </div>
+
+                    <div className='output-block'>
+                        <label htmlFor="outputAlcohol">Преобразовать в:</label>
+                        <select
+                            id="outputAlcohol"
+                            value={outputAlcohol}
+                            onChange={(event) => setOutputAlcohol(event.target.value)}>
+                            <option value="beer">Пиво</option>
+                            <option value="vodka">Водка</option>
+                            <option value="wine">Вино</option>
+                            <option value="whiskey">Виски</option>
+                            <option value="brandy">Коньяк</option>
+                        </select>
+
+                        <h2>Эквивалент: {convertAlcohol()} литров {outputAlcohol === 'beer' ? 'пива' : outputAlcohol === 'vodka' ? 'водки' : outputAlcohol === 'wine' ? 'вина' : outputAlcohol === 'whiskey' ? 'виски' : 'коньяка'}</h2>
+                    </div>
                 </div>
-            </form>
-            <PostList somePost={somePost} title="My plans" removePost={removePost} />
-        </div>
+            </div>
+
+            
+        </>
     );
 }
 
